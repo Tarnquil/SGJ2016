@@ -1,15 +1,28 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour
+{
+	[SerializeField]
+	Text
+		testLabel;
 
-	// Use this for initialization
-	void Start () {
-	
+
+
+	List<int> currentSpell = new List<int> ();
+	int x = 0;
+
+	void ClearSpell ()
+	{
+		currentSpell = new List<int> ();
+	}
+
+	public void AddNodeToSpell (int _nodeNumber)
+	{
+		x++;
+		testLabel.text = x.ToString ();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }
