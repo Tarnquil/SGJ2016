@@ -4,11 +4,11 @@ using System.Collections;
 
 public class NetPlayerTest : NetworkBehaviour
 {
-
+	PlayerController player;
 	// Use this for initialization
 	void Start ()
 	{
-		
+		player = GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ();
 	}
 
 	[ServerCallback]
@@ -19,23 +19,20 @@ public class NetPlayerTest : NetworkBehaviour
 
 	public void Testing ()
 	{
-		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player"))
-		{
+		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player")) {
 			Debug.Log ("Testing");
 		}
 	}
 
 	[ClientRpc]
-	public void RpcScream (string _sound)
+	public void RpcSpell (string _spell)
 	{
-		this.gameObject.transform.Translate (Vector3.one * Random.Range (-1.0f, 1.0f));
-		Debug.Log (_sound);
+		player.InstantiateSpell (_spell);
 	}
 
 	[Command]
-	public void CmdScream (string _sound)
+	public void CmdSpell (string _spell)
 	{
-		this.gameObject.transform.Translate (Vector3.one * Random.Range (-1.0f, 1.0f));
-		Debug.Log (_sound);
+		player.InstantiateSpell (_spell);
 	}
 }
