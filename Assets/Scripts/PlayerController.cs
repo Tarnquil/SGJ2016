@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour
 
 	void Update ()
 	{
-		if(Input.GetMouseButtonUp (0))
+		if(Input.GetMouseButtonUp(0))
 		{
 			CheckIfValidSpell(testLabel.text);
 		}
@@ -68,7 +68,7 @@ public class PlayerController : MonoBehaviour
 	public void AddNodeToSpell (int _nodeNumber)
 	{
 		Debug.Log ("FRIED");
-		if (!currentSpell.Contains (_nodeNumber) && Input.GetMouseButtonDown(0)) 
+		if (!currentSpell.Contains (_nodeNumber)) 
 		{
 			currentSpell.Add (_nodeNumber);
 			testLabel.text = testLabel.text + _nodeNumber.ToString ();
