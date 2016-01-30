@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 		currentSpell.Clear ();
 	}
 
-	public void AddNodeToSpell (string _nodeNumber)
+	public void AddNodeToSpell (int _nodeNumber)
 	{
 		Debug.Log ("FRIED");
 		if (!currentSpell.Contains (_nodeNumber)) {
