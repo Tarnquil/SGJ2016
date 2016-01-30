@@ -27,14 +27,14 @@ public class NetPlayerTest : NetworkBehaviour
 	[ClientRpc]
 	public void RpcSpell (string _spell)
 	{
-		if (!Network.isServer)
+		if (!(GetComponent <NetworkIdentity> ().isServer)) {
 			player.InstantiateSpell (_spell);
+		}
 	}
 
 	[Command]
 	public void CmdSpell (string _spell)
 	{
-		
 		player.InstantiateSpell (_spell);
 	}
 }
