@@ -11,36 +11,12 @@ public class PlayerController : MonoBehaviour
     Text testLabel;
     [SerializeField]
     TextAsset spellXmlFile;
-
-    XmlDocument xmlDoc;
-    XmlNodeList spellList;
-    List<int> currentSpell = new List<int>();
-    int x = 0;
-
-
     [SerializeField]
+    Transform
+    lineParent;
     int health = 100;
     [SerializeField]
     int mana = 100;
-
-    public MyNetManager test;
-
-    void Start()
-    {
-        xmlDoc = new XmlDocument();
-        xmlDoc.LoadXml(spellXmlFile.ToString());
-        spellList = xmlDoc.SelectNodes("spells/spell");
-
-    }
-
-    void Update()
-    {
-        if (Input.GetMouseButtonUp(0))
-        {
-            CheckIfValidSpell(testLabel.text);
-        }
-    }
-
 
     public int Health
     {
@@ -66,6 +42,66 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    XmlDocument xmlDoc;
+    XmlNodeList spellList;
+    List<int> currentSpell = new List<int>();
+    public List<GameObject> spellPrefabs = new List<GameObject>();
+
+    public LineRenderer currentLine;
+
+
+    bool dragging = false;
+    public MyNetManager test;
+
+    void Start()
+    {
+        xmlDoc = new XmlDocument();
+        xmlDoc.LoadXml(spellXmlFile.ToString());
+        spellList = xmlDoc.SelectNodes("spells/spell");
+
+    }
+
+    void Update()
+    {
+        //Debug.Log (test.IsClientConnected ().ToString ());
+        if (currentLine != null)
+        {
+            Debug.Log("working");
+            Vector3 linePos = Input.mousePosition;
+            linePos.z += 15;
+            currentLine.SetPosition(1, Camera.main.ScreenToWorldPoint(linePos));
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            List<GameObject> children = new List<GameObject>();
+            foreach (Transform child in lineParent)
+            {
+                children.Add(child.gameObject);
+            }
+
+            children.ForEach(child => Destroy(child));
+
+            //	dragging = false;
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                CheckIfValidSpell(testLabel.text);
+
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            CheckIfValidSpell("1234");
+        }
+    }
+
+
+
+
     void ClearSpell()
     {
         currentSpell.Clear();
@@ -74,15 +110,49 @@ public class PlayerController : MonoBehaviour
     public void AddNodeToSpell(int _nodeNumber)
     {
         Debug.Log("FRIED");
-        if (!currentSpell.Contains(_nodeNumber))
+
+        if (!currentSpell.Contains(_nodeNumber) && currentSpell.Count < 8)
         {
+
+
             currentSpell.Add(_nodeNumber);
             testLabel.text = testLabel.text + _nodeNumber.ToString();
+
+
+            GameObject newLine = new GameObject();
+            newLine.transform.parent = lineParent;
+            currentLine = newLine.AddComponent<LineRenderer>();
+            currentLine.SetWidth(0.5f, 0.5f);
+
+            Vector3 linePos = Input.mousePosition;
+            linePos.z += 15;
+
+            currentLine.SetPosition(0, Camera.main.ScreenToWorldPoint(linePos));
+            dragging = true;
         }
     }
 
+
     void CheckIfValidSpell(string spellcode)
     {
+        //Check against XML Spells
+
+        if (spellcode == "1234")
+        {
+            foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+            {
+
+                if (player.GetComponent<NetworkIdentity>().isClient && Network.isClient)
+                {
+                    (player.GetComponent<NetPlayerTest>()).CmdScream(spellcode);
+                }
+                else if (player.GetComponent<NetworkIdentity>().isServer && player.GetComponent<NetworkIdentity>().isClient)
+                {
+                    (player.GetComponent<NetPlayerTest>()).RpcScream(spellcode);
+                }
+            }
+        }
+
         string nodeSequence;
         string spellCast = "No match";
         bool spellFound = false;
@@ -98,8 +168,6 @@ public class PlayerController : MonoBehaviour
                 break;
         }
         Debug.Log(spellCast);
-
-
     }
 
     void UpdateHealth(int newHealth)

@@ -8,7 +8,7 @@ public class NetPlayerTest : NetworkBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-	
+		
 	}
 
 	[ServerCallback]

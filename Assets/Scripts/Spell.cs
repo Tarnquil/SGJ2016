@@ -15,7 +15,7 @@ public class Spell : MonoBehaviour
 	protected void Start () 
 	{
 		particles = GetComponent<ParticleSystem>();
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+		player = GameObject.FindGameObjectWithTag("GameController").GetComponent<PlayerController>();
 	}
 		
 	virtual protected void Cast()
