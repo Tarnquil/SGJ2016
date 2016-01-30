@@ -57,6 +57,11 @@ public class PlayerController : MonoBehaviour
 			children.ForEach (child => Destroy (child));
 
 			//	dragging = false;
+
+			if (Input.GetMouseButtonUp (0)) {
+				CheckIfValidSpell (testLabel.text);
+
+			}
 		}
 	}
 
@@ -75,7 +80,7 @@ public class PlayerController : MonoBehaviour
 			return this.mana;
 		}
 		set {
-			this.mana = value;
+			UpdateMana (value);
 		}
 	}
 
@@ -87,7 +92,10 @@ public class PlayerController : MonoBehaviour
 	public void AddNodeToSpell (int _nodeNumber)
 	{
 		Debug.Log ("FRIED");
+
 		if (!currentSpell.Contains (_nodeNumber) && currentSpell.Count < 8) {
+
+
 			currentSpell.Add (_nodeNumber);
 			testLabel.text = testLabel.text + _nodeNumber.ToString ();
 		
@@ -106,10 +114,10 @@ public class PlayerController : MonoBehaviour
 	}
 
 
-
-	void CheckIfValidSpell ()
+	void CheckIfValidSpell (string spellcode)
 	{
-		
+		//Check against XML Spells
+
 	}
 
 	void UpdateHealth (int newHealth)
