@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviour
 		case "Fireball":
 			{
 				Debug.Log ("INSTANT");
-				GameObject spellPrefab = spellPrefabs.Find (item => item.name == _spell);
+				GameObject spellPrefab = spellPrefabs [0];//spellPrefabs.Find (item => item.name == _spell);
 				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
 				break;
 			}
