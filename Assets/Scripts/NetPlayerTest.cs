@@ -4,7 +4,7 @@ using System.Collections;
 
 public class NetPlayerTest : NetworkBehaviour
 {
-	PlayerController player;
+	public PlayerController player;
 	// Use this for initialization
 	void Start ()
 	{

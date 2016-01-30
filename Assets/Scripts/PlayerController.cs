@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			Debug.Log ("UPDATING");
 			CheckIfValidSpell ("1234");
+
 		}
 	}
 
@@ -127,26 +128,6 @@ public class PlayerController : MonoBehaviour
 	{
 		//Check against XML Spells
 
-		if (spellcode == "1234") {
-			NetPlayerTest localPlayer = null;
-			foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
-				if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
-
-					localPlayer = player.GetComponent<NetPlayerTest> ();
-				}
-			}
-
-			if (localPlayer != null) {
-				if (localPlayer.isServer) {
-					Debug.Log ("Server");
-					localPlayer.RpcSpell ((spellcode));
-				} else {
-					Debug.Log ("Client");
-					localPlayer.CmdSpell ((spellcode));
-				}
-			}
-		}
-
 		string nodeSequence;
 		string spellCast = "No match";
 		bool spellFound = false;
@@ -156,8 +137,26 @@ public class PlayerController : MonoBehaviour
 				spellCast = spell.Attributes ["name"].Value;
 				spellFound = true;
 			}
-			if (spellFound)
-				break;
+			if (spellFound) {
+				NetPlayerTest localPlayer = null;
+				foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+					if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
+
+						localPlayer = player.GetComponent<NetPlayerTest> ();
+					}
+				}
+
+				if (localPlayer != null) {
+					if (localPlayer.isServer) {
+						Debug.Log ("Server");
+						localPlayer.RpcSpell ((spellCast));
+					} else {
+						Debug.Log ("Client");
+						localPlayer.CmdSpell ((spellCast));
+					}
+				}
+			}
+			break;
 		}
 		Debug.Log (spellCast);
 	}
@@ -183,6 +182,7 @@ public class PlayerController : MonoBehaviour
 		switch (_spell) {
 		case "Fireball":
 			{
+				Debug.Log ("INSTANT");
 				GameObject spellPrefab = spellPrefabs.Find (item => item.name == _spell);
 				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
 				break;
