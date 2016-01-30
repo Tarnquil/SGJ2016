@@ -28,6 +28,6 @@ public class NetPlayerTest : NetworkBehaviour
 	[Command]
 	public void CmdScream ()
 	{
-		Debug.Log ("Kyle is a dick");
+		this.gameObject.transform.Translate (Vector3.one * Random.Range (-1.0f, 1.0f));
 	}
 }
