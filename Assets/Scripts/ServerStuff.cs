@@ -18,12 +18,12 @@ public class ServerStuff : MonoBehaviour
 
 	public void Connect ()
 	{
-		disc.StartAsClient ();
+		//Network.
 	}
 
 	public void StartServer ()
 	{
-		disc.StartAsServer ();
+		// ();
 	}
 
 	void OnMatchCreate ()
