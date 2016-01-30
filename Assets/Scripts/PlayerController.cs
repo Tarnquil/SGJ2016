@@ -141,7 +141,6 @@ public class PlayerController : MonoBehaviour
 				NetPlayerTest localPlayer = null;
 				foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
 					if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
-
 						localPlayer = player.GetComponent<NetPlayerTest> ();
 					}
 				}
