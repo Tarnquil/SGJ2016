@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spells>
+<spell name="Fireball" manacost="5" strength="10" nodesequence="1,2,3,4">
+<spell name="Heal" manacost="5" strength="10" nodesequence="5,6,4">
+</spell>
+</spells>

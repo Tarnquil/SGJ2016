@@ -1,85 +1,95 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml;
 
 public class PlayerController : MonoBehaviour
 {
 	[SerializeField]
 	Text testLabel;
+	[SerializeField]
+	TextAsset spellXmlFile;
 
+	XmlDocument xmlDoc;
+	XmlNodeList spellList;
 	List<int> currentSpell = new List<int> ();
 	int x = 0;
+
 
 	[SerializeField]
 	int health = 100;
 	[SerializeField]
 	int mana = 100;
 
-	public int Health
+	public MyNetManager test;
+
+	void Start ()
 	{
-		get
-		{
+		xmlDoc = new XmlDocument ();
+		xmlDoc.LoadXml (spellXmlFile.ToString ());
+		spellList = xmlDoc.SelectNodes ("spells/spell");
+	
+	}
+
+	void Update ()
+	{
+		Debug.Log (test.IsClientConnected ().ToString ());
+	}
+
+
+	public int Health {
+		get {
 			return this.health;
 		}
-		set
-		{
-			UpdateHealth(value);
+		set {
+			UpdateHealth (value);
 		}
 	}
 
-	public int Mana
-	{
-		get
-		{
+	public int Mana {
+		get {
 			return this.mana;
 		}
-		set
-		{
+		set {
 			this.mana = value;
 		}
 	}
 
 	void ClearSpell ()
 	{
-		currentSpell = new List<int> ();
+		currentSpell.Clear ();
 	}
 
 	public void AddNodeToSpell (int _nodeNumber)
 	{
-		Debug.Log("FRIED");
-//		x++;
-//		testLabel.text = x.ToString();
-		if(!currentSpell.Contains (_nodeNumber))
-		{
+		Debug.Log ("FRIED");
+		if (!currentSpell.Contains (_nodeNumber)) {
 			currentSpell.Add (_nodeNumber);
 			testLabel.text = testLabel.text + _nodeNumber.ToString ();
 		}
 	}
 
-	void UpdateHealth(int newHealth)
+	void CheckIfValidSpell ()
+	{
+		
+	}
+
+	void UpdateHealth (int newHealth)
 	{
 		health = newHealth;
-		if(health == 0)
-		{
+		if (health <= 0) {
 			//DEAD
 		}
 
 		// PUT ANIMATION OF UI HERE
 	}
 
-	void UpdateMana(int newMana)
+	void UpdateMana (int newMana)
 	{
 		mana = newMana;
 		// PUT UI ANIMATION CODE HERE 
-	}
-
-	void Update()
-	{
-		if(Input.GetMouseButtonDown (0))
-		{
-			
-		}
 	}
 	
 }
