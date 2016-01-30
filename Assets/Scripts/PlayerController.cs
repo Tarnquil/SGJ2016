@@ -35,7 +35,6 @@ public class PlayerController : MonoBehaviour
 
 	void Update ()
 	{
-		Debug.Log (test.IsClientConnected ().ToString ());
 		if(Input.GetMouseButtonUp (0))
 		{
 			CheckIfValidSpell(testLabel.text);
@@ -57,7 +56,7 @@ public class PlayerController : MonoBehaviour
 			return this.mana;
 		}
 		set {
-			this.mana = value;
+			UpdateMana (value);
 		}
 	}
 
@@ -76,15 +75,17 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	void CheckIfValidSpell ()
+	void CheckIfValidSpell (string spellcode)
 	{
 		//Check against XML Spells
+
 	}
 
 	void UpdateHealth (int newHealth)
 	{
 		health = newHealth;
-		if (health <= 0) {
+		if (health <= 0) 
+		{
 			//DEAD
 		}
 
