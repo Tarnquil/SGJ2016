@@ -10,22 +10,23 @@ public class NetPlayerTest : NetworkBehaviour
 	{
 	
 	}
-	
-	// Update is called once per frame
+
+	[ServerCallback]
 	void Update ()
 	{
-	
+		
 	}
 
 	public void Testing ()
 	{
 		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player")) {
 			Debug.Log ("Testing");
-			cubes.GetComponent<NetPlayerTest> ().Scream ();
+			cubes.GetComponent<NetPlayerTest> ().CmdScream ();
 		}
 	}
 
-	public void Scream ()
+	[Command]
+	public void CmdScream ()
 	{
 		Debug.Log ("Kyle is a dick");
 	}
