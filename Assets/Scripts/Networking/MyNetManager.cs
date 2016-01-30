@@ -10,7 +10,6 @@ public class MyNetManager : NetworkManager
 	{
 		discovery.Initialize();
 		discovery.StartAsServer();
-
 	}
 
 	public override void OnStartClient(NetworkClient client)

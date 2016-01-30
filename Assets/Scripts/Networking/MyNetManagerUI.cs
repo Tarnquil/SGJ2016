@@ -5,20 +5,25 @@ using UnityEngine.Networking;
 
 public class MyNetManagerUI : MonoBehaviour 
 {
-	public NetworkManager netMan;
+	public MyNetManager netMan;
 	// Use this for initialization
 	void Start () 
 	{
+		netMan = GetComponent <MyNetManager> ();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-	
+		
 	}
 
 	public void StartNetworkHost()
 	{
-		
+	}
+
+	public void Listen()
+	{
+		//netMan();
 	}
 }
