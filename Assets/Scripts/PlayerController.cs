@@ -140,20 +140,25 @@ public class PlayerController : MonoBehaviour
 
         if (spellcode == "1234")
         {
+			NetPlayerTest localPlayer = null;
             foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
-            {
+			{
+				if (player.GetComponent <NetworkIdentity>().isLocalPlayer)
+				{
 
-                if (player.GetComponent<NetworkIdentity>().isClient && Network.isClient)
-                {
-					Debug.Log ("CLIENT");
-                    (player.GetComponent<NetPlayerTest>()).CmdScream(spellcode);
-                }
-                else if (player.GetComponent<NetworkIdentity>().isServer && player.GetComponent<NetworkIdentity>().isClient)
-                {
-					Debug.Log ("SERVER");
-                    (player.GetComponent<NetPlayerTest>()).RpcScream(spellcode);
+					localPlayer = player.GetComponent<NetPlayerTest> ();
                 }
             }
+
+			if (localPlayer != null) {
+				if (localPlayer.isServer) {
+					Debug.Log ("Server");
+					localPlayer.CmdScream ((spellcode));
+				} else {
+					Debug.Log ("Client");
+					localPlayer.RpcScream ((spellcode));
+				}
+			}
         }
 
         string nodeSequence;

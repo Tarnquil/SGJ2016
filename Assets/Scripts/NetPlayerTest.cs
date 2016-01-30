@@ -19,9 +19,9 @@ public class NetPlayerTest : NetworkBehaviour
 
 	public void Testing ()
 	{
-		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player")) {
+		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player"))
+		{
 			Debug.Log ("Testing");
-			//cubes.GetComponent<NetPlayerTest> ().RpcScream ();
 		}
 	}
 
