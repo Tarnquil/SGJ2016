@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     TextAsset spellXmlFile;
     [SerializeField]
-    Transform
-    lineParent;
+    Transform lineParent;
+
     int health = 100;
     [SerializeField]
     int mana = 100;
@@ -86,15 +86,16 @@ public class PlayerController : MonoBehaviour
 
             //	dragging = false;
 
-            if (Input.GetMouseButtonUp(0))
+			/* if (Input.GetMouseButtonUp(0))
             {
                 CheckIfValidSpell(testLabel.text);
 
-            }
+            }*/
         }
 
-        if (Input.GetKeyDown(KeyCode.KeypadEnter))
+		if (Input.GetKeyDown(KeyCode.Space))
         {
+			Debug.Log ("UPDATING");
             CheckIfValidSpell("1234");
         }
     }
@@ -144,10 +145,12 @@ public class PlayerController : MonoBehaviour
 
                 if (player.GetComponent<NetworkIdentity>().isClient && Network.isClient)
                 {
+					Debug.Log ("CLIENT");
                     (player.GetComponent<NetPlayerTest>()).CmdScream(spellcode);
                 }
                 else if (player.GetComponent<NetworkIdentity>().isServer && player.GetComponent<NetworkIdentity>().isClient)
                 {
+					Debug.Log ("SERVER");
                     (player.GetComponent<NetPlayerTest>()).RpcScream(spellcode);
                 }
             }
