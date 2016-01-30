@@ -77,7 +77,10 @@ public class PlayerController : MonoBehaviour
 
 	void CheckIfValidSpell (string spellcode)
 	{
-		//Check against XML Spells
+        foreach(XmlNode spell in spellList)
+        {
+            if(spell.Name[]
+        }
 
 	}
 
