@@ -21,19 +21,21 @@ public class NetPlayerTest : NetworkBehaviour
 	{
 		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player")) {
 			Debug.Log ("Testing");
-			cubes.GetComponent<NetPlayerTest> ().RpcScream ();
+			//cubes.GetComponent<NetPlayerTest> ().RpcScream ();
 		}
 	}
 
 	[ClientRpc]
-	public void RpcScream ()
+	public void RpcScream (string _sound)
 	{
 		this.gameObject.transform.Translate (Vector3.one * Random.Range (-1.0f, 1.0f));
+		Debug.Log (_sound);
 	}
 
 	[Command]
-	public void CmdScream ()
+	public void CmdScream (string _sound)
 	{
 		this.gameObject.transform.Translate (Vector3.one * Random.Range (-1.0f, 1.0f));
+		Debug.Log (_sound);
 	}
 }
