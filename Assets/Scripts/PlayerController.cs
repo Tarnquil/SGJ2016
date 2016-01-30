@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	TextAsset spellXmlFile;
 	[SerializeField]
+	Transform
+	lineParent;
 	int health = 100;
 	[SerializeField]
 	int mana = 100;
@@ -40,13 +42,17 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+
+
 	XmlDocument xmlDoc;
 	XmlNodeList spellList;
 	List<int> currentSpell = new List<int> ();
 	public List<GameObject> spellPrefabs = new List<GameObject>();
 
+	public LineRenderer currentLine;
 
 
+	bool dragging = false;
 	public MyNetManager test;
 
 	void Start ()
@@ -59,9 +65,28 @@ public class PlayerController : MonoBehaviour
 
 	void Update ()
 	{
-		if(Input.GetMouseButtonUp(0))
-		{
-			CheckIfValidSpell(testLabel.text);
+		//Debug.Log (test.IsClientConnected ().ToString ());
+		if (currentLine != null) {
+			Debug.Log ("working");
+			Vector3 linePos = Input.mousePosition;
+			linePos.z += 15;
+			currentLine.SetPosition (1, Camera.main.ScreenToWorldPoint (linePos));
+		}
+
+		if (Input.GetMouseButtonUp (0)) {
+			List<GameObject> children = new List<GameObject> ();
+			foreach (Transform child in lineParent) {
+				children.Add (child.gameObject);
+			}
+
+			children.ForEach (child => Destroy (child));
+
+			//	dragging = false;
+
+			if (Input.GetMouseButtonUp (0)) {
+				CheckIfValidSpell (testLabel.text);
+
+			}
 		}
 
 		if(Input.GetKeyDown(KeyCode.KeypadEnter))
@@ -81,12 +106,27 @@ public class PlayerController : MonoBehaviour
 	public void AddNodeToSpell (int _nodeNumber)
 	{
 		Debug.Log ("FRIED");
-		if (!currentSpell.Contains (_nodeNumber)) 
-		{
+
+		if (!currentSpell.Contains (_nodeNumber) && currentSpell.Count < 8) {
+
+
 			currentSpell.Add (_nodeNumber);
 			testLabel.text = testLabel.text + _nodeNumber.ToString ();
+		
+
+			GameObject newLine = new GameObject ();
+			newLine.transform.parent = lineParent;
+			currentLine = newLine.AddComponent<LineRenderer> ();
+			currentLine.SetWidth (0.5f, 0.5f);
+
+			Vector3 linePos = Input.mousePosition;
+			linePos.z += 15;
+
+			currentLine.SetPosition (0, Camera.main.ScreenToWorldPoint (linePos));
+			dragging = true;
 		}
 	}
+
 
 	void CheckIfValidSpell (string spellcode)
 	{
@@ -112,8 +152,7 @@ public class PlayerController : MonoBehaviour
 	void UpdateHealth (int newHealth)
 	{
 		health = newHealth;
-		if (health <= 0) 
-		{
+		if (health <= 0) {
 			//DEAD
 		}
 
