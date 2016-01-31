@@ -30,10 +30,18 @@ public class MyNetManager : NetworkManager
 
 	public override void OnServerDisconnect (NetworkConnection conn)
 	{
-		Application.LoadLevel (Application.loadedLevel);
+		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("DISCONNECTED");
+		Invoke ("ReloadLevel", 3.0f);
 	}
 
 	public override void OnClientDisconnect (NetworkConnection conn)
+	{
+		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("DISCONNECTED");
+
+		Invoke ("ReloadLevel", 3.0f);
+	}
+
+	void ReloadLevel ()
 	{
 		Application.LoadLevel (Application.loadedLevel);
 	}
