@@ -10,6 +10,10 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Text testLabel;
 	[SerializeField]
+	Text playerOneReadyText;
+	[SerializeField]
+	Text playerTwoReadyText;
+	[SerializeField]
 	TextAsset spellXmlFile;
 	[SerializeField]
 	Transform lineParent;
@@ -27,6 +31,8 @@ public class PlayerController : MonoBehaviour
 	Material
 		lineMat;
 
+	bool loadingGame = false;
+
 
 	public bool playerOneReady;
 	public bool playerTwoReady;
@@ -39,6 +45,8 @@ public class PlayerController : MonoBehaviour
 		IN_GAME,
 		SEARCHING,
 		SETTINGUP,
+		WINNER,
+		LOSER,
 		NULL
 	}
 
@@ -125,8 +133,18 @@ public class PlayerController : MonoBehaviour
 
 	void LobbyUpdate ()
 	{
-		if (playerOneReady && playerTwoReady) {
-			ChangeState ("IN_GAME");
+
+		if (playerOneReady) {
+			playerOneReadyText.text = "Player One: Ready";
+
+		}
+
+		if (playerTwoReady) {
+			playerTwoReadyText.text = "Player Two: Ready";
+		}
+
+		if (playerOneReady && playerTwoReady && !loadingGame) {
+			Invoke ("StartGame", 1.0f);
 		}
 	}
 
@@ -216,7 +234,7 @@ public class PlayerController : MonoBehaviour
 			if (spellcode.Equals (nodeSequence)) {
 				spellCast = spell.Attributes ["name"].Value;
 				spellFound = true;
-                Mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
+				Mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
 			}
 			if (spellFound) {
 				NetPlayerTest localPlayer = null;
@@ -247,8 +265,9 @@ public class PlayerController : MonoBehaviour
 		health = newHealth;
 		if (health <= 0) {
 			//DEAD
+			Lose ();
 		}
-
+		Mathf.Clamp (health, 0, 100);
 		// PUT ANIMATION OF UI HERE
 		healthBar.SetEnergyBar ((float)health / (float)100);
 	}
@@ -256,6 +275,7 @@ public class PlayerController : MonoBehaviour
 	void UpdateMana (int newMana)
 	{
 		mana = newMana;
+		Mathf.Clamp (mana, 0, 100);
 		// PUT UI ANIMATION CODE HERE 
 		manaBar.SetEnergyBar ((float)mana / (float)100);
 	}
@@ -293,5 +313,32 @@ public class PlayerController : MonoBehaviour
 				localPlayer.CmdReady ();
 			}
 		}
+	}
+
+	void StartGame ()
+	{
+		ChangeState ("IN_GAME");
+	}
+
+	void Lose ()
+	{
+		NetPlayerTest localPlayer = null;
+		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+			if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
+				localPlayer = player.GetComponent<NetPlayerTest> ();
+			}
+		}
+
+		if (localPlayer != null) {
+			if (localPlayer.isServer) {
+				localPlayer.RpcWinner ();
+			} else {
+				Debug.Log ("Client");
+				playerTwoReady = true;
+				localPlayer.CmdWinner ();
+			}
+		}
+
+		localPlayer.RpcLoser ();
 	}
 }

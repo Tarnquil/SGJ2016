@@ -28,6 +28,16 @@ public class MyNetManager : NetworkManager
 
 	}
 
+	public override void OnServerDisconnect (NetworkConnection conn)
+	{
+		Application.LoadLevel (Application.loadedLevel);
+	}
+
+	public override void OnClientDisconnect (NetworkConnection conn)
+	{
+		Application.LoadLevel (Application.loadedLevel);
+	}
+
 	public override void OnClientConnect (NetworkConnection conn)
 	{
 		base.OnClientConnect (conn);

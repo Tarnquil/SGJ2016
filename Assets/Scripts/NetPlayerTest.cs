@@ -41,15 +41,42 @@ public class NetPlayerTest : NetworkBehaviour
 	[ClientRpc]
 	public void RpcReady ()
 	{
-		if (!(GetComponent <NetworkIdentity> ().isServer)) 
-		{
-            player.playerOneReady = true;
+		if (!(GetComponent <NetworkIdentity> ().isServer)) {
+			player.playerOneReady = true;
 		}
 	}
 
 	[Command]
 	public void CmdReady ()
 	{
-        player.playerTwoReady = true;
+		player.playerTwoReady = true;
+	}
+
+	[ClientRpc]
+	public void RpcWinner ()
+	{
+		if (!(GetComponent <NetworkIdentity> ().isServer)) {
+			GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("WINNER");
+		}
+	}
+
+	//[ClientRpc]
+	public void RpcLoser ()
+	{
+//		if (!(GetComponent <NetworkIdentity> ().isServer)) {
+		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOSER");
+//		}
+	}
+
+	[Command]
+	public void CmdWinner ()
+	{
+		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("WINNER");
+	}
+
+	//[Command]
+	public void CmdLoser ()
+	{
+		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOSER");
 	}
 }
