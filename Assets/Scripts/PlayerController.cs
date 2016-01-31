@@ -46,12 +46,15 @@ public class PlayerController : MonoBehaviour
 	{
 		START,
 		ROLECHOICE,
+		SPELLBOOK,
 		LOBBY,
 		IN_GAME,
 		SEARCHING,
 		SETTINGUP,
 		WINNER,
 		LOSER,
+		DISCONNECTED,
+		SPELLBOOKINGAME,
 		NULL
 	}
 
