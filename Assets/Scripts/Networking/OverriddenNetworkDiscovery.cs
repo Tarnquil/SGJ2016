@@ -7,10 +7,10 @@ public class OverriddenNetworkDiscovery : NetworkDiscovery
 {
 	public MyNetManager netMan;
 	// Use this for initialization
-	//void Start ()
-	//{
-	//	netMan = GetComponent <MyNetManager> ();
-	//}
+	void Start ()
+	{
+		netMan = GetComponent <MyNetManager> ();
+	}
 
 	public override void OnReceivedBroadcast (string fromAddress, string data)
 	{
@@ -19,7 +19,6 @@ public class OverriddenNetworkDiscovery : NetworkDiscovery
 		Debug.Log (hostId);
 		netMan.networkAddress = fromAddress;
 		netMan.discovery.StopBroadcast ();
-
 		netMan.StartClient ();
 	}
 

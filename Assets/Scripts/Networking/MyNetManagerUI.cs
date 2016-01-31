@@ -7,10 +7,6 @@ public class MyNetManagerUI : MonoBehaviour
 {
 	public MyNetManager netMan;
 	// Use this for initialization
-	void Start ()
-	{
-		netMan = GetComponent <MyNetManager> ();
-	}
 
 	public void StartNetworkHost ()
 	{
