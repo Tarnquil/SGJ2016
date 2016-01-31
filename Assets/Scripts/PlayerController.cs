@@ -31,7 +31,10 @@ public class PlayerController : MonoBehaviour
 	Material
 		lineMat;
 
+
 	bool loadingGame = false;
+
+	bool castSpell = false;
 
 
 	public bool playerOneReady;
@@ -56,6 +59,7 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	GameObject[] uiGroups;
 
+	public int Shield = 0;
 
 	public int Health {
 		get {
@@ -74,8 +78,6 @@ public class PlayerController : MonoBehaviour
 			UpdateMana (value);
 		}
 	}
-
-
 
 	public XmlDocument xmlDoc;
 	public XmlNodeList spellList;
@@ -128,6 +130,7 @@ public class PlayerController : MonoBehaviour
 			GameUpdate ();
 			break;
 		}
+			
 
 	}
 
@@ -152,7 +155,7 @@ public class PlayerController : MonoBehaviour
 	{
 		//Debug.Log (test.IsClientConnected ().ToString ());
 		if (currentLine != null) {
-			Debug.Log ("working");
+//			Debug.Log ("working");
 			Vector3 linePos = Input.mousePosition;
 			linePos.z += 15;
 			currentLine.SetPosition (1, this.gameObject.GetComponent<Camera> ().ScreenToWorldPoint (linePos));
@@ -160,6 +163,7 @@ public class PlayerController : MonoBehaviour
 
 		if (Input.GetMouseButtonUp (0)) {
 			EndSpell ();
+			castSpell = false;
 			//	dragging = false;
 
 			/* if (Input.GetMouseButtonUp(0))
@@ -174,6 +178,8 @@ public class PlayerController : MonoBehaviour
 			CheckIfValidSpell ("1234");
 
 		}
+
+		Mana++;
 	}
 
 
@@ -198,13 +204,14 @@ public class PlayerController : MonoBehaviour
 	{
 		Debug.Log ("FRIED");
 
-		if (!currentSpell.Contains (_nodeNumber) && currentSpell.Count < 8) {
+		if (!currentSpell.Contains (_nodeNumber) && currentSpell.Count < 8 && !castSpell) {
 
 
 			currentSpell.Add (_nodeNumber);
 
 			testLabel.text = testLabel.text + _nodeNumber.ToString ();
 			if (CheckIfValidSpell ((testLabel.text))) {
+				castSpell = true;
 				EndSpell ();
 			}
 
@@ -237,24 +244,27 @@ public class PlayerController : MonoBehaviour
 				Mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
 			}
 			if (spellFound) {
-				NetPlayerTest localPlayer = null;
-				foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
-					if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
-						localPlayer = player.GetComponent<NetPlayerTest> ();
+				if (spellCast == "Heal" || spellCast == "Shield") {
+					InstantiateSpell (spellCast);
+				} else {
+					NetPlayerTest localPlayer = null;
+					foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
+						if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
+							localPlayer = player.GetComponent<NetPlayerTest> ();
+						}
 					}
-				}
 
-				if (localPlayer != null) {
-					if (localPlayer.isServer) {
-						Debug.Log ("Server");
-						localPlayer.RpcSpell ((spellCast));
-					} else {
-						Debug.Log ("Client");
-						localPlayer.CmdSpell ((spellCast));
+					if (localPlayer != null) {
+						if (localPlayer.isServer) {
+							Debug.Log ("Server");
+							localPlayer.RpcSpell ((spellCast));
+						} else {
+							Debug.Log ("Client");
+							localPlayer.CmdSpell ((spellCast));
+						}
 					}
 				}
 			}
-			break;
 		}
 		Debug.Log (spellCast);
 		return spellFound;
@@ -267,7 +277,9 @@ public class PlayerController : MonoBehaviour
 			//DEAD
 			Lose ();
 		}
-		Mathf.Clamp (health, 0, 100);
+
+
+		health = Mathf.Clamp (health, 0, 100);
 		// PUT ANIMATION OF UI HERE
 		healthBar.SetEnergyBar ((float)health / (float)100);
 	}
@@ -275,7 +287,7 @@ public class PlayerController : MonoBehaviour
 	void UpdateMana (int newMana)
 	{
 		mana = newMana;
-		Mathf.Clamp (mana, 0, 100);
+		mana = Mathf.Clamp (mana, 0, 100);
 		// PUT UI ANIMATION CODE HERE 
 		manaBar.SetEnergyBar ((float)mana / (float)100);
 	}
@@ -290,7 +302,30 @@ public class PlayerController : MonoBehaviour
 				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
 				break;
 			}
+		case "Heal":
+			{
+				Debug.Log ("INSTANT");
+				GameObject spellPrefab = spellPrefabs [1];//spellPrefabs.Find (item => item.name == _spell);
+				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
+				break;
+			}
+		case "Shield":
+			{
+				Debug.Log ("INSTANT");
+				GameObject spellPrefab = spellPrefabs [2];//spellPrefabs.Find (item => item.name == _spell);
+				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
+				break;
+			}
+		case "Sacrifice":
+			{
+				Debug.Log ("INSTANT");
+				GameObject spellPrefab = spellPrefabs [3];//spellPrefabs.Find (item => item.name == _spell);
+				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
+				break;
+			}
 		}
+
+
 	}
 
 	public void ReadyLobby ()
