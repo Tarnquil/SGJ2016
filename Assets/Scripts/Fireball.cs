@@ -5,16 +5,9 @@ using UnityEngine.Networking;
 
 public class Fireball : Spell
 {
-
-	// Use this for initialization
-	void Start () 
+	override protected void Cast ()
 	{
-		base.Start();
-	}
-
-	override protected void Cast()
-	{
-		base.Cast();
+		base.Cast ();
 		player.Health -= spellStrength;
 	}
 }

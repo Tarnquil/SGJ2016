@@ -15,11 +15,33 @@ public class PlayerController : MonoBehaviour
 	Transform lineParent;
 	[SerializeField]
 	EnergyBar
-	manaBar;
+		manaBar;
 
 	int health = 100;
 	[SerializeField]
 	int mana = 100;
+
+
+	public bool playerOneReady;
+	public bool playerTwoReady;
+
+	public enum State
+	{
+		START,
+		ROLECHOICE,
+		LOBBY,
+		IN_GAME,
+		SEARCHING,
+		SETTINGUP,
+		NULL
+	}
+
+
+	State currentState, prevState;
+
+	[SerializeField]
+	GameObject[] uiGroups;
+
 
 	public int Health {
 		get {
@@ -52,8 +74,26 @@ public class PlayerController : MonoBehaviour
 	bool dragging = false;
 	public MyNetManager test;
 
+	public void ChangeState (string _toChangeTo)
+	{
+		currentState = (State)System.Enum.Parse (typeof(State), _toChangeTo);
+	}
+
+	void SwitchUIGroup (string _toSwitchTo)
+	{
+		foreach (GameObject canvas in uiGroups) {
+			if (canvas.name == _toSwitchTo) {
+				canvas.SetActive (true);
+			} else {
+				canvas.SetActive (false);
+			}
+		}
+	}
+
 	void Start ()
 	{
+		currentState = State.START;
+		prevState = State.NULL;
 		xmlDoc = new XmlDocument ();
 		xmlDoc.LoadXml (spellXmlFile.ToString ());
 		spellList = xmlDoc.SelectNodes ("spells/spell");
@@ -62,12 +102,36 @@ public class PlayerController : MonoBehaviour
 
 	void Update ()
 	{
+		if (prevState != currentState) {
+			prevState = currentState;
+			SwitchUIGroup (currentState.ToString ());
+		} 
+
+		switch (currentState) {
+		case State.LOBBY:
+			LobbyUpdate ();
+			;
+			break;
+		case State.IN_GAME:
+			GameUpdate ();
+			break;
+		}
+
+	}
+
+	void LobbyUpdate ()
+	{
+		
+	}
+
+	void GameUpdate ()
+	{
 		//Debug.Log (test.IsClientConnected ().ToString ());
 		if (currentLine != null) {
 			Debug.Log ("working");
 			Vector3 linePos = Input.mousePosition;
 			linePos.z += 15;
-			currentLine.SetPosition (1, this.gameObject.GetComponent<Camera>().ScreenToWorldPoint (linePos));
+			currentLine.SetPosition (1, this.gameObject.GetComponent<Camera> ().ScreenToWorldPoint (linePos));
 		}
 
 		if (Input.GetMouseButtonUp (0)) {
@@ -89,7 +153,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 
-	void EndSpell()
+	void EndSpell ()
 	{
 		List<GameObject> children = new List<GameObject> ();
 		foreach (Transform child in lineParent) {
@@ -116,8 +180,7 @@ public class PlayerController : MonoBehaviour
 			currentSpell.Add (_nodeNumber);
 
 			testLabel.text = testLabel.text + _nodeNumber.ToString ();
-			if(CheckIfValidSpell ((testLabel.text)))
-			{
+			if (CheckIfValidSpell ((testLabel.text))) {
 				EndSpell ();
 			}
 
@@ -129,7 +192,7 @@ public class PlayerController : MonoBehaviour
 			Vector3 linePos = Input.mousePosition;
 			linePos.z += 15;
 
-			currentLine.SetPosition (0, this.gameObject.GetComponent<Camera>().ScreenToWorldPoint (linePos));
+			currentLine.SetPosition (0, this.gameObject.GetComponent<Camera> ().ScreenToWorldPoint (linePos));
 			dragging = true;
 		}
 	}
@@ -147,7 +210,7 @@ public class PlayerController : MonoBehaviour
 				spellCast = spell.Attributes ["name"].Value;
 				spellFound = true;
 				mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
-				manaBar.SetEnergyBar ((float)mana/(float)100);
+				manaBar.SetEnergyBar ((float)mana / (float)100);
 			}
 			if (spellFound) {
 				NetPlayerTest localPlayer = null;

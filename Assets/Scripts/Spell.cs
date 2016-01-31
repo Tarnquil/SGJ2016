@@ -21,8 +21,8 @@ public class Spell : MonoBehaviour
 
 	virtual protected void Cast ()
 	{
-		if (player.Mana > manaCost) {
-			particles.Play ();
-		}
+		//if (player.Mana > manaCost) {
+		particles.Play ();
+		//}
 	}
 }
