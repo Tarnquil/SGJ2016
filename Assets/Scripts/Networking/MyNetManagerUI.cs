@@ -3,26 +3,23 @@ using System.Collections;
 using UnityEngine.Networking.NetworkSystem;
 using UnityEngine.Networking;
 
-public class MyNetManagerUI : MonoBehaviour 
+public class MyNetManagerUI : MonoBehaviour
 {
 	public MyNetManager netMan;
 	// Use this for initialization
-	void Start () 
+	void Start ()
 	{
 		netMan = GetComponent <MyNetManager> ();
 	}
-	
-	// Update is called once per frame
-	void Update () 
+
+	public void StartNetworkHost ()
 	{
+		netMan.StartHost ();
 	}
 
-	public void StartNetworkHost()
+	public void Listen ()
 	{
-	}
-
-	public void Listen()
-	{
-		//netMan();
+		netMan.discovery.Initialize ();
+		netMan.discovery.StartAsClient ();
 	}
 }

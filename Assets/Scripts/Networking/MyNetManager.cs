@@ -4,22 +4,32 @@ using UnityEngine.Networking;
 
 public class MyNetManager : NetworkManager
 {
-	public NetworkDiscovery discovery;
+	public OverriddenNetworkDiscovery discovery;
 
-	public override void OnStartHost()
+	public override void OnStartHost ()
 	{
-		discovery.Initialize();
-		discovery.StartAsServer();
+		discovery.Initialize ();
+		discovery.StartAsServer ();
 	}
 
-	public override void OnStartClient(NetworkClient client)
+	public override void OnStartClient (NetworkClient client)
 	{
+		//discovery.StartAsClient ();
 		discovery.showGUI = false;
+
 	}
 
-	public override void OnStopClient()
+	public override void OnClientConnect (NetworkConnection conn)
 	{
-		discovery.StopBroadcast();
+		base.OnClientConnect (conn);
+		discovery.StopBroadcast ();
+	}
+
+	public override void OnStopClient ()
+	{
+		discovery.StopBroadcast ();
 		discovery.showGUI = true;
 	}
 }
+
+
