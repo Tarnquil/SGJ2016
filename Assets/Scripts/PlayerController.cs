@@ -23,6 +23,10 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	int mana = 100;
 
+	[SerializeField]
+	Material
+		lineMat;
+
 
 	public bool playerOneReady;
 	public bool playerTwoReady;
@@ -122,10 +126,9 @@ public class PlayerController : MonoBehaviour
 
 	void LobbyUpdate ()
 	{
-        if(playerOneReady && playerTwoReady)
-        {
-            ChangeState("IN_GAME");
-        }
+		if (playerOneReady && playerTwoReady) {
+			ChangeState ("IN_GAME");
+		}
 	}
 
 	void GameUpdate ()
@@ -191,7 +194,8 @@ public class PlayerController : MonoBehaviour
 			GameObject newLine = new GameObject ();
 			newLine.transform.parent = lineParent;
 			currentLine = newLine.AddComponent<LineRenderer> ();
-			currentLine.SetWidth (0.5f, 0.5f);
+			currentLine.SetWidth (1.0f, 1.0f);
+			currentLine.material = lineMat;
 
 			Vector3 linePos = Input.mousePosition;
 			linePos.z += 15;
@@ -242,8 +246,7 @@ public class PlayerController : MonoBehaviour
 	void UpdateHealth (int newHealth)
 	{
 		health = newHealth;
-		if (health <= 0) 
-		{
+		if (health <= 0) {
 			//DEAD
 		}
 
@@ -270,28 +273,25 @@ public class PlayerController : MonoBehaviour
 			}
 		}
 	}
-	public void ReadyLobby()
+
+	public void ReadyLobby ()
 	{
 		NetPlayerTest localPlayer = null;
-		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) 
-		{
+		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) {
 			if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
 				localPlayer = player.GetComponent<NetPlayerTest> ();
 			}
 		}
 
 		if (localPlayer != null) {
-			if (localPlayer.isServer)
-			{
+			if (localPlayer.isServer) {
 				Debug.Log ("Server");
-                playerOneReady = true;
+				playerOneReady = true;
 				localPlayer.RpcReady ();
-			} 
-			else 
-			{
+			} else {
 				Debug.Log ("Client");
-                playerTwoReady = true;
-                localPlayer.CmdReady ();
+				playerTwoReady = true;
+				localPlayer.CmdReady ();
 			}
 		}
 	}
