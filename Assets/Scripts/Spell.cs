@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Spell : MonoBehaviour 
+public class Spell : MonoBehaviour
 {
 	[SerializeField]
 	int manaCost;
@@ -12,17 +12,17 @@ public class Spell : MonoBehaviour
 	protected PlayerController player;
 
 	// Use this for initialization
-	protected void Start () 
+	protected void Start ()
 	{
-		particles = GetComponent<ParticleSystem>();
-		player = GameObject.FindGameObjectWithTag("GameController").GetComponent<PlayerController>();
+		particles = GetComponent<ParticleSystem> ();
+		player = GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ();
+		Cast ();
 	}
-		
-	virtual protected void Cast()
+
+	virtual protected void Cast ()
 	{
-		if (player.Mana > manaCost)
-		{
-			particles.Play();
+		if (player.Mana > manaCost) {
+			particles.Play ();
 		}
 	}
 }
