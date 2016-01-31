@@ -8,6 +8,20 @@ public class Fireball : Spell
 	override protected void Cast ()
 	{
 		base.Cast ();
-		player.Health -= spellStrength;
+		if(player.Shield > 0)
+		{
+			player.Shield -= spellStrength;
+			if(player.Shield < 0)
+			{
+				player.Health += player.Shield;
+				player.Shield = 0;
+			}
+		}
+		else
+		{
+			player.Health -= spellStrength;
+		}
+
+
 	}
 }

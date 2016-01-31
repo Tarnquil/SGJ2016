@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spells>
-	<spell name="Fireball" manacost="20" strength="10" nodesequence="1234"></spell>
-	<spell name="Heal" manacost="5" strength="10" nodesequence="564"></spell>
+	<spell name="Fireball" manacost="20" strength="15" nodesequence="1234"></spell>
+	<spell name="Heal" manacost="25" strength="10" nodesequence="7315"></spell>
+	<spell name="Sacrifice" manacost="-20" strength="20" nodesequence="1564"></spell>
+	<spell name="Shield" manacost="20" strength="20" nodesequence="258"></spell>
 </spells>
