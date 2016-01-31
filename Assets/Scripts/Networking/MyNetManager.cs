@@ -17,7 +17,6 @@ public class MyNetManager : NetworkManager
 	{
 		base.OnStartServer ();
 		Debug.Log ("Weeee");
-
 	}
 
 	public override void OnStartClient (NetworkClient client)
@@ -32,12 +31,11 @@ public class MyNetManager : NetworkManager
 	public override void OnClientConnect (NetworkConnection conn)
 	{
 		base.OnClientConnect (conn);
-		if (!discovery.isServer) {
+		if (!discovery.isServer) 
+		{
 			discovery.StopBroadcast ();
 		}
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOBBY");
-
-
 		Debug.Log ("One or Two");
 	}
 
@@ -49,7 +47,7 @@ public class MyNetManager : NetworkManager
 
 	void Update ()
 	{
-		Debug.Log (discovery.running);
+		//Debug.Log (discovery.running);
 	}
 
 }

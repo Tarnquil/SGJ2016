@@ -16,13 +16,14 @@ public class Spell : MonoBehaviour
 	{
 		particles = GetComponent<ParticleSystem> ();
 		player = GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ();
-		Cast ();
+		Cast();
 	}
 
 	virtual protected void Cast ()
 	{
-		//if (player.Mana > manaCost) {
-		particles.Play ();
-		//}
+		if (player.Mana > manaCost) 
+		{
+			particles.Play ();
+		}
 	}
 }

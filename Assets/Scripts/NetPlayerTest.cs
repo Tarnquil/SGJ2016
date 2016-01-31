@@ -37,4 +37,19 @@ public class NetPlayerTest : NetworkBehaviour
 	{
 		player.InstantiateSpell (_spell);
 	}
+
+	[ClientRpc]
+	public void RpcReady ()
+	{
+		if (!(GetComponent <NetworkIdentity> ().isServer)) 
+		{
+			player.playerTwoReady = true;
+		}
+	}
+
+	[Command]
+	public void CmdReady ()
+	{
+		player.playerOneReady = true;
+	}
 }

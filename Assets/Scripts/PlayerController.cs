@@ -14,9 +14,11 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Transform lineParent;
 	[SerializeField]
-	EnergyBar
-		manaBar;
+	EnergyBar manaBar;
+	[SerializeField]
+	EnergyBar healthBar;
 
+	[SerializeField]
 	int health = 100;
 	[SerializeField]
 	int mana = 100;
@@ -37,7 +39,7 @@ public class PlayerController : MonoBehaviour
 	}
 
 
-	State currentState, prevState;
+	public State currentState, prevState;
 
 	[SerializeField]
 	GameObject[] uiGroups;
@@ -72,7 +74,7 @@ public class PlayerController : MonoBehaviour
 
 
 	bool dragging = false;
-	public MyNetManager test;
+	public MyNetManager netMan;
 
 	public void ChangeState (string _toChangeTo)
 	{
@@ -97,7 +99,6 @@ public class PlayerController : MonoBehaviour
 		xmlDoc = new XmlDocument ();
 		xmlDoc.LoadXml (spellXmlFile.ToString ());
 		spellList = xmlDoc.SelectNodes ("spells/spell");
-
 	}
 
 	void Update ()
@@ -210,7 +211,6 @@ public class PlayerController : MonoBehaviour
 				spellCast = spell.Attributes ["name"].Value;
 				spellFound = true;
 				mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
-				manaBar.SetEnergyBar ((float)mana / (float)100);
 			}
 			if (spellFound) {
 				NetPlayerTest localPlayer = null;
@@ -239,17 +239,20 @@ public class PlayerController : MonoBehaviour
 	void UpdateHealth (int newHealth)
 	{
 		health = newHealth;
-		if (health <= 0) {
+		if (health <= 0) 
+		{
 			//DEAD
 		}
 
 		// PUT ANIMATION OF UI HERE
+		healthBar.SetEnergyBar ((float)health / (float)100);
 	}
 
 	void UpdateMana (int newMana)
 	{
 		mana = newMana;
 		// PUT UI ANIMATION CODE HERE 
+		manaBar.SetEnergyBar ((float)mana / (float)100);
 	}
 
 	public void InstantiateSpell (string _spell)
@@ -261,6 +264,31 @@ public class PlayerController : MonoBehaviour
 				GameObject spellPrefab = spellPrefabs [0];//spellPrefabs.Find (item => item.name == _spell);
 				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
 				break;
+			}
+		}
+	}
+	public void ReadyLobby()
+	{
+		NetPlayerTest localPlayer = null;
+		foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player")) 
+		{
+			if (player.GetComponent <NetworkIdentity> ().isLocalPlayer) {
+				localPlayer = player.GetComponent<NetPlayerTest> ();
+			}
+		}
+
+		if (localPlayer != null) {
+			if (localPlayer.isServer)
+			{
+				Debug.Log ("Server");
+                playerOneReady = true;
+				localPlayer.RpcReady ();
+			} 
+			else 
+			{
+				Debug.Log ("Client");
+                playerTwoReady = true;
+                localPlayer.CmdReady ();
 			}
 		}
 	}
