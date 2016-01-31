@@ -18,7 +18,7 @@ public class OverriddenNetworkDiscovery : NetworkDiscovery
 		Debug.Log (data);
 		Debug.Log (hostId);
 		netMan.networkAddress = fromAddress;
-		netMan.discovery.StopBroadcast ();
+//		netMan.discovery.StopBroadcast ();
 		netMan.StartClient ();
 	}
 

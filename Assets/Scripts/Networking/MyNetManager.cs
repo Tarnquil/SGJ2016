@@ -22,7 +22,7 @@ public class MyNetManager : NetworkManager
 	public override void OnStartClient (NetworkClient client)
 	{
 		discovery.StartAsClient ();
-		//Debug.Log ("Mother FUckr");
+		//Debug.Log ("Mother Fuckr");
 		discovery.showGUI = false;
 		//Debug.Log (discovery.running);
 
@@ -31,8 +31,7 @@ public class MyNetManager : NetworkManager
 	public override void OnClientConnect (NetworkConnection conn)
 	{
 		base.OnClientConnect (conn);
-		if (!discovery.isServer) 
-		{
+		if (!discovery.isServer) {
 			discovery.StopBroadcast ();
 		}
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOBBY");

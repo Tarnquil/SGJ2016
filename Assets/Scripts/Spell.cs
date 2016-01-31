@@ -16,14 +16,20 @@ public class Spell : MonoBehaviour
 	{
 		particles = GetComponent<ParticleSystem> ();
 		player = GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ();
-		Cast();
+		Cast ();
 	}
 
 	virtual protected void Cast ()
 	{
-		if (player.Mana > manaCost) 
-		{
-			particles.Play ();
-		}
+		Debug.Log ("Mother fuckers are fucking mothers");
+		particles.Play ();
+		Invoke ("KillMe", 5.0f);
+	}
+
+
+
+	void KillMe ()
+	{
+		Destroy (this.gameObject);
 	}
 }
