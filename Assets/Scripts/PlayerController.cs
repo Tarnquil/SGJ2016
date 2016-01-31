@@ -13,6 +13,9 @@ public class PlayerController : MonoBehaviour
 	TextAsset spellXmlFile;
 	[SerializeField]
 	Transform lineParent;
+	[SerializeField]
+	EnergyBar
+	manaBar;
 
 	int health = 100;
 	[SerializeField]
@@ -64,17 +67,11 @@ public class PlayerController : MonoBehaviour
 			Debug.Log ("working");
 			Vector3 linePos = Input.mousePosition;
 			linePos.z += 15;
-			currentLine.SetPosition (1, Camera.main.ScreenToWorldPoint (linePos));
+			currentLine.SetPosition (1, this.gameObject.GetComponent<Camera>().ScreenToWorldPoint (linePos));
 		}
 
 		if (Input.GetMouseButtonUp (0)) {
-			List<GameObject> children = new List<GameObject> ();
-			foreach (Transform child in lineParent) {
-				children.Add (child.gameObject);
-			}
-
-			children.ForEach (child => Destroy (child));
-
+			EndSpell ();
 			//	dragging = false;
 
 			/* if (Input.GetMouseButtonUp(0))
@@ -92,7 +89,17 @@ public class PlayerController : MonoBehaviour
 	}
 
 
+	void EndSpell()
+	{
+		List<GameObject> children = new List<GameObject> ();
+		foreach (Transform child in lineParent) {
+			children.Add (child.gameObject);
+		}
 
+		children.ForEach (child => Destroy (child));
+		testLabel.text = "";
+		ClearSpell ();
+	}
 
 	void ClearSpell ()
 	{
@@ -107,8 +114,12 @@ public class PlayerController : MonoBehaviour
 
 
 			currentSpell.Add (_nodeNumber);
-			testLabel.text = testLabel.text + _nodeNumber.ToString ();
 
+			testLabel.text = testLabel.text + _nodeNumber.ToString ();
+			if(CheckIfValidSpell ((testLabel.text)))
+			{
+				EndSpell ();
+			}
 
 			GameObject newLine = new GameObject ();
 			newLine.transform.parent = lineParent;
@@ -118,16 +129,15 @@ public class PlayerController : MonoBehaviour
 			Vector3 linePos = Input.mousePosition;
 			linePos.z += 15;
 
-			currentLine.SetPosition (0, Camera.main.ScreenToWorldPoint (linePos));
+			currentLine.SetPosition (0, this.gameObject.GetComponent<Camera>().ScreenToWorldPoint (linePos));
 			dragging = true;
 		}
 	}
 
 
-	void CheckIfValidSpell (string spellcode)
+	bool CheckIfValidSpell (string spellcode)
 	{
 		//Check against XML Spells
-
 		string nodeSequence;
 		string spellCast = "No match";
 		bool spellFound = false;
@@ -136,6 +146,8 @@ public class PlayerController : MonoBehaviour
 			if (spellcode.Equals (nodeSequence)) {
 				spellCast = spell.Attributes ["name"].Value;
 				spellFound = true;
+				mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
+				manaBar.SetEnergyBar ((float)mana/(float)100);
 			}
 			if (spellFound) {
 				NetPlayerTest localPlayer = null;
@@ -158,6 +170,7 @@ public class PlayerController : MonoBehaviour
 			break;
 		}
 		Debug.Log (spellCast);
+		return spellFound;
 	}
 
 	void UpdateHealth (int newHealth)
@@ -186,9 +199,6 @@ public class PlayerController : MonoBehaviour
 				Instantiate (spellPrefab, Vector3.zero, Quaternion.identity);
 				break;
 			}
-
-
 		}
 	}
-
 }
