@@ -7,5 +7,6 @@ public class Shield : Spell
 	{
 		base.Cast ();
 		player.Shield += spellStrength;
+		player.ShieldOn();
 	}
 }

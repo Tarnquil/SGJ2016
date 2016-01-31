@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 	[SerializeField]
 	Text testLabel;
 	[SerializeField]
+	Text spellLabel;
+	[SerializeField]
 	Text playerOneReadyText;
 	[SerializeField]
 	Text playerTwoReadyText;
@@ -23,9 +25,9 @@ public class PlayerController : MonoBehaviour
 	EnergyBar healthBar;
 
 	[SerializeField]
-	int health = 100;
+	float health = 100;
 	[SerializeField]
-	int mana = 100;
+	float mana = 100;
 
 	[SerializeField]
 	Material
@@ -61,7 +63,7 @@ public class PlayerController : MonoBehaviour
 
 	public int Shield = 0;
 
-	public int Health {
+	public float Health {
 		get {
 			return this.health;
 		}
@@ -70,7 +72,8 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	public int Mana {
+	public float Mana 
+	{
 		get {
 			return this.mana;
 		}
@@ -88,6 +91,8 @@ public class PlayerController : MonoBehaviour
 
 	bool dragging = false;
 	public MyNetManager netMan;
+
+	public GameObject ShieldObject;
 
 	public void ChangeState (string _toChangeTo)
 	{
@@ -131,6 +136,11 @@ public class PlayerController : MonoBehaviour
 			break;
 		}
 			
+
+		if(Shield <= 0)
+		{
+			ShieldOff ();
+		}
 
 	}
 
@@ -179,7 +189,7 @@ public class PlayerController : MonoBehaviour
 
 		}
 
-		Mana++;
+		Mana += 0.05f;
 	}
 
 
@@ -244,7 +254,8 @@ public class PlayerController : MonoBehaviour
 				Mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
 			}
 			if (spellFound) {
-				if (spellCast == "Heal" || spellCast == "Shield") {
+				spellLabel.text = spellCast;
+				if (spellCast == "Heal" || spellCast == "Shield" || spellCast == "Sacrifice") {
 					InstantiateSpell (spellCast);
 				} else {
 					NetPlayerTest localPlayer = null;
@@ -270,7 +281,7 @@ public class PlayerController : MonoBehaviour
 		return spellFound;
 	}
 
-	void UpdateHealth (int newHealth)
+	void UpdateHealth (float newHealth)
 	{
 		health = newHealth;
 		if (health <= 0) {
@@ -284,7 +295,7 @@ public class PlayerController : MonoBehaviour
 		healthBar.SetEnergyBar ((float)health / (float)100);
 	}
 
-	void UpdateMana (int newMana)
+	void UpdateMana (float newMana)
 	{
 		mana = newMana;
 		mana = Mathf.Clamp (mana, 0, 100);
@@ -375,5 +386,15 @@ public class PlayerController : MonoBehaviour
 		}
 
 		localPlayer.RpcLoser ();
+	}
+
+	public void ShieldOn()
+	{
+		ShieldObject.SetActive (true);
+	}
+
+	public void ShieldOff()
+	{
+		ShieldObject.SetActive (false);
 	}
 }
