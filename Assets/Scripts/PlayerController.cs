@@ -65,13 +65,12 @@ public class PlayerController : MonoBehaviour
 
 
 
-	XmlDocument xmlDoc;
-	XmlNodeList spellList;
+	public XmlDocument xmlDoc;
+	public XmlNodeList spellList;
 	List<int> currentSpell = new List<int> ();
 	public List<GameObject> spellPrefabs = new List<GameObject> ();
 
 	public LineRenderer currentLine;
-
 
 	bool dragging = false;
 	public MyNetManager netMan;
@@ -213,7 +212,7 @@ public class PlayerController : MonoBehaviour
 			if (spellcode.Equals (nodeSequence)) {
 				spellCast = spell.Attributes ["name"].Value;
 				spellFound = true;
-				mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
+                Mana -= System.Convert.ToInt32 (spell.Attributes ["manacost"].Value);
 			}
 			if (spellFound) {
 				NetPlayerTest localPlayer = null;

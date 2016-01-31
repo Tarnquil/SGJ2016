@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Xml;
 
 public class Spell : MonoBehaviour
 {
@@ -7,6 +8,8 @@ public class Spell : MonoBehaviour
 	int manaCost;
 	[SerializeField]
 	protected int spellStrength;
+    [SerializeField]
+    protected string name;
 
 	protected ParticleSystem particles;
 	protected PlayerController player;
@@ -16,6 +19,9 @@ public class Spell : MonoBehaviour
 	{
 		particles = GetComponent<ParticleSystem> ();
 		player = GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ();
+        XmlNode spell = player.xmlDoc.SelectSingleNode("spells/spell[@name='"+name+"']");
+        manaCost = int.Parse(spell.Attributes["manacost"].Value);
+        spellStrength = int.Parse(spell.Attributes["strength"].Value);
 		Cast ();
 	}
 
