@@ -12,10 +12,19 @@ public class MyNetManager : NetworkManager
 		discovery.StartAsServer ();
 	}
 
+	public override void OnStartServer ()
+	{
+		base.OnStartServer ();
+		Debug.Log ("Weeee");
+
+	}
+
 	public override void OnStartClient (NetworkClient client)
 	{
-		//discovery.StartAsClient ();
+		discovery.StartAsClient ();
+		//Debug.Log ("Mother FUckr");
 		discovery.showGUI = false;
+		//Debug.Log (discovery.running);
 
 	}
 
@@ -29,6 +38,12 @@ public class MyNetManager : NetworkManager
 	{
 		discovery.StopBroadcast ();
 		discovery.showGUI = true;
+	}
+
+	public override void OnServerReady (NetworkConnection conn)
+	{
+		base.OnServerReady (conn);
+		Debug.Log ("dfsdfsdfs");
 	}
 }
 

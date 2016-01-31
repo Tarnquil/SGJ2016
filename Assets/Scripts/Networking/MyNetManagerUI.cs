@@ -21,5 +21,7 @@ public class MyNetManagerUI : MonoBehaviour
 	{
 		netMan.discovery.Initialize ();
 		netMan.discovery.StartAsClient ();
+		//Debug.Log (netMan.discovery.isClient);
+
 	}
 }
