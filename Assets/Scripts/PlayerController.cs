@@ -122,7 +122,10 @@ public class PlayerController : MonoBehaviour
 
 	void LobbyUpdate ()
 	{
-		
+        if(playerOneReady && playerTwoReady)
+        {
+            ChangeState("IN_GAME");
+        }
 	}
 
 	void GameUpdate ()

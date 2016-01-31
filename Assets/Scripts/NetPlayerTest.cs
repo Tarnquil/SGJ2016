@@ -43,13 +43,13 @@ public class NetPlayerTest : NetworkBehaviour
 	{
 		if (!(GetComponent <NetworkIdentity> ().isServer)) 
 		{
-			player.playerTwoReady = true;
+            player.playerOneReady = true;
 		}
 	}
 
 	[Command]
 	public void CmdReady ()
 	{
-		player.playerOneReady = true;
+        player.playerTwoReady = true;
 	}
 }
