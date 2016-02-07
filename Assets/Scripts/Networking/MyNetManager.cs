@@ -10,7 +10,6 @@ public class MyNetManager : NetworkManager
 	{
 		discovery.Initialize ();
 		discovery.StartAsServer ();
-	
 	}
 
 	public override void OnStartServer ()
@@ -49,7 +48,8 @@ public class MyNetManager : NetworkManager
 	public override void OnClientConnect (NetworkConnection conn)
 	{
 		base.OnClientConnect (conn);
-		if (!discovery.isServer) {
+		if (!discovery.isServer) 
+		{
 			discovery.StopBroadcast ();
 		}
 		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOBBY");
@@ -59,7 +59,7 @@ public class MyNetManager : NetworkManager
 	public override void OnStopClient ()
 	{
 		discovery.StopBroadcast ();
-		discovery.showGUI = true;
+		//discovery.showGUI = true;
 	}
 
 	void Update ()

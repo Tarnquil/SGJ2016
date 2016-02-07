@@ -5,29 +5,19 @@ using System.Collections;
 public class NetPlayerTest : NetworkBehaviour
 {
 	public PlayerController player;
+	NetworkIdentity networkID;
 	// Use this for initialization
 	void Start ()
 	{
 		player = GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ();
+		networkID = GetComponent <NetworkIdentity> ();
 	}
-
-	[ServerCallback]
-	void Update ()
-	{
 		
-	}
-
-	public void Testing ()
-	{
-		foreach (GameObject cubes in GameObject.FindGameObjectsWithTag("Player")) {
-			Debug.Log ("Testing");
-		}
-	}
-
 	[ClientRpc]
 	public void RpcSpell (string _spell)
 	{
-		if (!(GetComponent <NetworkIdentity> ().isServer)) {
+		if (!(networkID.isServer)) 
+		{
 			player.InstantiateSpell (_spell);
 		}
 	}
@@ -41,7 +31,7 @@ public class NetPlayerTest : NetworkBehaviour
 	[ClientRpc]
 	public void RpcReady ()
 	{
-		if (!(GetComponent <NetworkIdentity> ().isServer)) {
+		if (!(networkID.isServer)) {
 			player.playerOneReady = true;
 		}
 	}
@@ -55,28 +45,28 @@ public class NetPlayerTest : NetworkBehaviour
 	[ClientRpc]
 	public void RpcWinner ()
 	{
-		if (!(GetComponent <NetworkIdentity> ().isServer)) {
-			GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("WINNER");
+		if (!(networkID.isServer)) {
+			player.ChangeState ("WINNER");
 		}
 	}
 
 	//[ClientRpc]
 	public void RpcLoser ()
 	{
-//		if (!(GetComponent <NetworkIdentity> ().isServer)) {
-		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOSER");
+		//		if (!(networkID.isServer)) {
+			player.ChangeState ("LOSER");
 //		}
 	}
 
 	[Command]
 	public void CmdWinner ()
 	{
-		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("WINNER");
+		player.ChangeState ("WINNER");
 	}
 
 	//[Command]
 	public void CmdLoser ()
 	{
-		GameObject.FindGameObjectWithTag ("GameController").GetComponent<PlayerController> ().ChangeState ("LOSER");
+		player.ChangeState ("LOSER");
 	}
 }
